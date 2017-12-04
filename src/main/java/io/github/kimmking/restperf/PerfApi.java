@@ -1,15 +1,11 @@
 package io.github.kimmking.restperf;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -17,15 +13,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -86,7 +77,7 @@ public class PerfApi {
 
     public static void main(String[] args){
         try {
-            List<String> lines = IOUtils.readLines(PerfApi.class.getClassLoader().getResourceAsStream("api.txt"));
+            List<String> lines = IOUtils.readLines(PerfApi.class.getClassLoader().getResourceAsStream("api1201.log"));
 
             login();
 
@@ -117,9 +108,13 @@ public class PerfApi {
             int statusCode = response.getStatusLine().getStatusCode();
 
             //System.out.println("statusCode:" + statusCode);
-            System.out.println( (endTime - startTime) + ","+ url );
-            if (statusCode != HttpStatus.SC_OK) {
-                System.out.println("Method failed:" + response.getStatusLine());
+            long delta = (endTime - startTime);
+
+            if (statusCode == HttpStatus.SC_OK) {
+                System.out.println( delta + ","+ url );
+            }else{
+                System.out.println( "-1,"+ url );
+                //System.out.println("Method failed:" + response.getStatusLine());
             }
             EntityUtils.toString(response.getEntity());
             //System.out.println( EntityUtils.toString(response.getEntity()));
